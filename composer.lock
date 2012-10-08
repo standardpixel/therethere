@@ -1,5 +1,5 @@
 {
-    "hash": "8fca00574fa519ec7d7250059522a4e4",
+    "hash": "b5b9ebbafd0168be73bbc9360124f29e",
     "packages": [
         {
             "name": "kriswallsmith/buzz",
@@ -169,6 +169,53 @@
             "keywords": [
                 "microframework"
             ]
+        },
+        {
+            "name": "symfony/console",
+            "version": "dev-master",
+            "target-dir": "Symfony/Component/Console",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Console",
+                "reference": "3d40994abcbbfa9e69fc91bc48215109a4fc837a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/symfony/Console/zipball/3d40994abcbbfa9e69fc91bc48215109a4fc837a",
+                "reference": "3d40994abcbbfa9e69fc91bc48215109a4fc837a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "time": "1349553479",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Console\\": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Console Component",
+            "homepage": "http://symfony.com"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -517,6 +564,7 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "kriswallsmith/buzz": 20
+        "kriswallsmith/buzz": 20,
+        "symfony/console": 20
     }
 }
