@@ -16,11 +16,13 @@
 
             {% for step in leg.steps %}
                 <div>
+                    {{ step.travel_mode }}
                     {{ step.html_instructions }}
                     {{ step.distance.text }}
                     {{ step.duration.text }}
                 </div>
             {% endfor %}
+            
         {% endfor %}
     
     {% endfor %}
