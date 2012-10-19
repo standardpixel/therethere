@@ -1,0 +1,8 @@
+.bryant header {
+	display: none;
+}
+
+.bryant section.map .holder {
+	width:100%;
+	height:500px;
+}
