@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>There There</title>
+</head>
+<body>
+    
+    {% for route in directions.routes %}
+
+        <h2>Route</h2>
+    
+        {% for leg in route.legs %}
+
+            {{ leg.distance.text }}
+            {{ leg.duration.text }}
+
+
+            {% for step in leg.steps %}
+                <div>
+                    {{ step.travel_mode }}
+                    {{ step.html_instructions }}
+                    {{ step.distance.text }}
+                    {{ step.duration.text }}
+                </div>
+            {% endfor %}
+            
+        {% endfor %}
+    
+    {% endfor %}
+    
+</body>

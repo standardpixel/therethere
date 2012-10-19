@@ -1,0 +1,220 @@
+{
+   "routes" : [
+      {
+         "bounds" : {
+            "northeast" : {
+               "lat" : 37.794280,
+               "lng" : -122.39670
+            },
+            "southwest" : {
+               "lat" : 37.758810,
+               "lng" : -122.415620
+            }
+         },
+         "copyrights" : "Map data ©2012 Google",
+         "legs" : [
+            {
+               "arrival_time" : {
+                  "text" : "5:12pm",
+                  "time_zone" : "America/Los_Angeles",
+                  "value" : 1349655120
+               },
+               "departure_time" : {
+                  "text" : "4:47pm",
+                  "time_zone" : "America/Los_Angeles",
+                  "value" : 1349653652
+               },
+               "distance" : {
+                  "text" : "3.3 mi",
+                  "value" : 5299
+               },
+               "duration" : {
+                  "text" : "24 mins",
+                  "value" : 1468
+               },
+               "end_address" : "475 Sansome St, San Francisco, CA 94111, USA",
+               "end_location" : {
+                  "lat" : 37.794280,
+                  "lng" : -122.401310
+               },
+               "start_address" : "777 Florida St, San Francisco, CA 94110, USA",
+               "start_location" : {
+                  "lat" : 37.759570,
+                  "lng" : -122.410890
+               },
+               "steps" : [
+                  {
+                     "distance" : {
+                        "text" : "0.2 mi",
+                        "value" : 397
+                     },
+                     "duration" : {
+                        "text" : "5 mins",
+                        "value" : 294
+                     },
+                     "end_location" : {
+                        "lat" : 37.758820,
+                        "lng" : -122.414610
+                     },
+                     "html_instructions" : "Walk to Folsom St & 20th St",
+                     "polyline" : {
+                        "points" : "i|meF`kcjVtAGHpCJxDL|EJvEPAAO"
+                     },
+                     "start_location" : {
+                        "lat" : 37.759570,
+                        "lng" : -122.410890
+                     },
+                     "steps" : [
+                        {
+                           "distance" : {
+                              "text" : "157 ft",
+                              "value" : 48
+                           },
+                           "duration" : {
+                              "text" : "1 min",
+                              "value" : 35
+                           },
+                           "end_location" : {
+                              "lat" : 37.759140,
+                              "lng" : -122.410850
+                           },
+                           "html_instructions" : "Head \u003cb\u003esouth\u003c/b\u003e on \u003cb\u003eFlorida St\u003c/b\u003e toward \u003cb\u003e20th St\u003c/b\u003e",
+                           "polyline" : {
+                              "points" : "i|meF`kcjVtAG"
+                           },
+                           "start_location" : {
+                              "lat" : 37.759570,
+                              "lng" : -122.410890
+                           },
+                           "travel_mode" : "WALKING"
+                        },
+                        {
+                           "distance" : {
+                              "text" : "0.2 mi",
+                              "value" : 339
+                           },
+                           "duration" : {
+                              "text" : "4 mins",
+                              "value" : 251
+                           },
+                           "end_location" : {
+                              "lat" : 37.75890,
+                              "lng" : -122.41470
+                           },
+                           "html_instructions" : "Turn \u003cb\u003eright\u003c/b\u003e onto \u003cb\u003e20th St\u003c/b\u003e",
+                           "polyline" : {
+                              "points" : "symeFxjcjVHpCJxDL|EJvE"
+                           },
+                           "start_location" : {
+                              "lat" : 37.759140,
+                              "lng" : -122.410850
+                           },
+                           "travel_mode" : "WALKING"
+                        },
+                        {
+                           "distance" : {
+                              "text" : "33 ft",
+                              "value" : 10
+                           },
+                           "duration" : {
+                              "text" : "1 min",
+                              "value" : 8
+                           },
+                           "end_location" : {
+                              "lat" : 37.758820,
+                              "lng" : -122.414610
+                           },
+                           "html_instructions" : "Turn \u003cb\u003eleft\u003c/b\u003e onto \u003cb\u003eFolsom St\u003c/b\u003e",
+                           "polyline" : {
+                              "points" : "cxmeFzbdjVPAAO"
+                           },
+                           "start_location" : {
+                              "lat" : 37.75890,
+                              "lng" : -122.41470
+                           },
+                           "travel_mode" : "WALKING"
+                        }
+                     ],
+                     "travel_mode" : "WALKING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "3.0 mi",
+                        "value" : 4902
+                     },
+                     "duration" : {
+                        "text" : "20 mins",
+                        "value" : 1174
+                     },
+                     "end_location" : {
+                        "lat" : 37.794280,
+                        "lng" : -122.401310
+                     },
+                     "html_instructions" : "Bus towards Jackson & Van Ness",
+                     "polyline" : {
+                        "points" : "swmeFhbdjV@NQ@_I\\_I\\UBiHZgER{BHo@DsGVoH\\O@cD?m@E?AyCu@kB}@cB}A{AcBe@m@y@kA}AwB}AwBaByBc@k@oEiGc@k@w@gAsAiBOSiA}AiA}AKMuAmBk@u@m@{@m@w@k@y@sAiBc@m@wC_EcDoEc@k@{HqKe@m@uAoBcF_Hc@k@mCsDmD}EILiAzAkA|AkA`BKLsAhBkA|AuAjBo@|@e@l@kA|AwApBoEeGH`BQ@gD`@eD`@SB}Df@_BPyAPw@JAK"
+                     },
+                     "start_location" : {
+                        "lat" : 37.758820,
+                        "lng" : -122.414610
+                     },
+                     "transit_details" : {
+                        "arrival_stop" : {
+                           "location" : {
+                              "lat" : 37.794280,
+                              "lng" : -122.401310
+                           },
+                           "name" : "Sansome St & Sacramento St"
+                        },
+                        "arrival_time" : {
+                           "text" : "5:12pm",
+                           "time_zone" : "America/Vancouver",
+                           "value" : 1349655120
+                        },
+                        "departure_stop" : {
+                           "location" : {
+                              "lat" : 37.7588150,
+                              "lng" : -122.4146060
+                           },
+                           "name" : "Folsom St & 20th St"
+                        },
+                        "departure_time" : {
+                           "text" : "4:52pm",
+                           "time_zone" : "America/Los_Angeles",
+                           "value" : 1349653946
+                        },
+                        "headsign" : "Jackson & Van Ness",
+                        "line" : {
+                           "agencies" : [
+                              {
+                                 "name" : "San Francisco Municipal Transportation Agency",
+                                 "url" : "http://www.sfmta.com/"
+                              }
+                           ],
+                           "name" : "Folsom/Pacific",
+                           "short_name" : "12",
+                           "vehicle" : {
+                              "icon" : "//maps.gstatic.com/mapfiles/transit/iw/6/bus.png",
+                              "name" : "Bus",
+                              "type" : "BUS"
+                           }
+                        },
+                        "num_stops" : 17
+                     },
+                     "travel_mode" : "TRANSIT"
+                  }
+               ],
+               "via_waypoint" : []
+            }
+         ],
+         "overview_polyline" : {
+            "points" : "i|meF`kcjVtAGHpCXvKJvEPAAO@NqI^uI`@}S~@cQt@sD@m@GyCu@kB}@cB}A{AcB_ByBaIuKoPeUyOiTiP{TkNoRmD}EILuCxDwFvHwFtHwApBoEeGH`BQ@mIbAqEj@yDb@w@JAK"
+         },
+         "warnings" : [
+            "Walking directions are in beta.    Use caution – This route may be missing sidewalks or pedestrian paths."
+         ],
+         "waypoint_order" : []
+      }
+   ],
+   "status" : "OK"
+}
