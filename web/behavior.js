@@ -154,16 +154,62 @@
 		state : 'no-route'
 	});
 	
+	function createUUID() {
+	    // http://www.ietf.org/rfc/rfc4122.txt
+	    var s = [];
+	    var hexDigits = "0123456789abcdef";
+	    for (var i = 0; i < 36; i++) {
+	        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+	    }
+	    s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+	    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+	    s[8] = s[13] = s[18] = s[23] = "-";
+
+	    var uuid = s.join("");
+	    return uuid;
+	}
+	
+	function reverseGeocode( location, callback ) {
+		
+		var callback_id = 'ttt_' + createUUID(),
+		    script_element;
+			
+		script_element = document.createElement('script');
+		
+		script_element.id  = 'callback_id' + '_script';
+		script_element.src = 'http://open.mapquestapi.com/geocoding/v1/reverse?lat=' + location[ 0 ] + '&lng=' + location[ 1 ] + '&callback=thereThere["' + callback_id + '_cb"]';
+		
+		thereThere[ callback_id + '_cb' ] = function( r ) {
+			//TODO: failure case, timeout case
+			callback.apply(thereThere, r.results[0].locations);
+		};
+		
+		document.body.appendChild( script_element );
+
+	}
+	
 	thereThere.appInit = function( callback, scope ) {
 		
 		scope = scope || thereThere;
 		
+		var coord;
+		
 		if( !thereThere.get( 'start-location' ) ) {
 		
 			navigator.geolocation.getCurrentPosition( function( location ) {
-				console.log('hi');
+				
+				if( thereThere.map_instance ) {
+					
+					coords = location.coords;
+					
+					thereThere.set( 'start-location', [ coords.latitude, coords.longitude ] );
+					
+				}
+				
 			} );
 		
+		} else {
+			console.log('already have a start location');
 		}
 		
 		callback.apply( scope, [  ] );
@@ -172,17 +218,48 @@
 	
 	thereThere.initMap = function( map_selector ) {
 		
-		var map_element = element = document.querySelector( map_selector );
+		var map_element = document.querySelector( map_selector );
 		
 		// initialize the map on the "map" div with a given center and zoom
-		var map = L.map( map_element, {
+		thereThere.map_instance = L.map( map_element, {
 		    center: [51.505, -0.09],
 		    zoom: 13
 		});
 		
 		L.tileLayer('http://{s}.tiles.mapbox.com/v3/mapbox.mapbox-streets/{z}/{x}/{y}.png', {
 			'subdomains' : 'abc'
-		}).addTo(map);
+		}).addTo( thereThere.map_instance );
+		
+		thereThere.when( 'start-location', function( args, locations ) {
+			thereThere.map_instance.panTo( new L.LatLng( locations.current[ 0 ], locations.current[ 1 ] ) );
+		} );
+		
+	}
+	
+	thereThere.initPlanner = function( planner_selector ) {
+		
+		var planner_element = document.querySelector( planner_selector ),
+		    start_field;
+		
+		if( planner_element ) {
+		
+			thereThere.when( 'start-location', function( args, locations ) {
+		
+				start_field = planner_element.querySelector( 'input[name=start-location]' );
+				
+				reverseGeocode( locations.current, function( r ) {
+					start_field.value = r.street + ', ' + r.adminArea5 + ', ' + r.adminArea3;
+				} );
+			
+				if( start_field ) {
+					start_field.value             = locations.current[ 0 ] + ', ' + locations.current[ 1 ];
+					start_field.dataset.latitude  = locations.current[ 0 ];
+					start_field.dataset.longitude = locations.current[ 1 ];
+				}
+		
+			} );
+				
+		}
 		
 	}
 
