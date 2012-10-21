@@ -150,6 +150,8 @@
 	
 	/** App code Begin **/
 	
+	var default_location = [ 34.0547, -118.2343 ];
+	
 	window.thereThere = new SM({
 		state : 'no-route'
 	});
@@ -196,17 +198,32 @@
 		
 		if( !thereThere.get( 'start-location' ) ) {
 		
-			navigator.geolocation.getCurrentPosition( function( location ) {
+			navigator.geolocation.getCurrentPosition( 
 				
-				if( thereThere.map_instance ) {
+				/*
+				* Yay
+				*/
+				function( location ) {
 					
-					coords = location.coords;
+					if( thereThere.map_instance ) {
 					
-					thereThere.set( 'start-location', [ coords.latitude, coords.longitude ] );
+						coords = location.coords;
 					
-				}
+						thereThere.set( 'start-location', [ coords.latitude, coords.longitude ] );
+						
+					}
+					
+				},
 				
-			} );
+				/*
+				* Yay
+				*/	
+				function() {
+				
+					thereThere.set( 'start-location', default_location );
+				
+				} 
+			);
 		
 		} else {
 			console.log('already have a start location');
@@ -218,8 +235,7 @@
 	
 	thereThere.initMap = function( map_selector ) {
 		
-		var map_element      = document.querySelector( map_selector ),
-		    default_location = [ 34.0547 -118.2343 ];
+		var map_element      = document.querySelector( map_selector );
 		
 		// initialize the map on the "map" div with a given center and zoom
 		thereThere.map_instance = L.map( map_element, {
@@ -257,7 +273,11 @@
 				start_field = planner_element.querySelector( 'input[name=start-location]' );
 				
 				reverseGeocode( locations.current, function( r ) {
-					start_field.value = r.street + ', ' + r.adminArea5 + ', ' + r.adminArea3;
+					if( r.geocodeQuality !== 'LATLNG' ) {
+						start_field.value = locations.current[ 0 ] + ', ' + locations.current[ 1 ];
+					} else {
+						
+					}
 				} );
 			
 				if( start_field ) {
