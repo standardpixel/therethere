@@ -218,11 +218,12 @@
 	
 	thereThere.initMap = function( map_selector ) {
 		
-		var map_element = document.querySelector( map_selector );
+		var map_element      = document.querySelector( map_selector ),
+		    default_location = [ 34.0547 -118.2343 ];
 		
 		// initialize the map on the "map" div with a given center and zoom
 		thereThere.map_instance = L.map( map_element, {
-		    center: [51.505, -0.09],
+		    center: default_location,
 		    zoom: 13
 		});
 		
@@ -230,8 +231,16 @@
 			'subdomains' : 'abc'
 		}).addTo( thereThere.map_instance );
 		
+		thereThere.start_marker = new L.marker( default_location ).addTo( thereThere.map_instance );
+		thereThere.start_marker.setOpacity( 0 );
+		
 		thereThere.when( 'start-location', function( args, locations ) {
+			
 			thereThere.map_instance.panTo( new L.LatLng( locations.current[ 0 ], locations.current[ 1 ] ) );
+			
+			thereThere.start_marker.setLatLng( locations.current );
+			thereThere.start_marker.setOpacity( 1 );
+			
 		} );
 		
 	}
