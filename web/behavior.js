@@ -361,6 +361,11 @@
 							
 						}
 						
+					
+						//
+						// Clear startValue for next time
+						//
+						field.dataset.startValue = '';
 					}
 					
 				}, false );
