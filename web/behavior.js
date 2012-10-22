@@ -150,7 +150,7 @@
 	
 	/** App code Begin **/
 	
-	var default_location = [ 34.0547, -118.2343 ];
+	var default_location = [ 34.0547, -118.2343 ]; //LA Union Station
 	
 	window.thereThere = new SM({
 		state : 'no-route'
@@ -179,11 +179,14 @@
 		script_element = document.createElement('script');
 		
 		script_element.id  = 'callback_id' + '_script';
-		script_element.src = 'http://open.mapquestapi.com/geocoding/v1/reverse?lat=' + location[ 0 ] + '&lng=' + location[ 1 ] + '&callback=thereThere["' + callback_id + '_cb"]';
+
+		script_element.src = 'https://api.foursquare.com/v2/venues/search?ll=' + location[ 0 ] + ',' + location[ 1 ] + '&oauth_token=U4SYDDY1YQD2QKP2I3BAJWJEO131TK21GDUMWP1PWNPGHTQR&intent=checkin&callback=thereThere["' + callback_id + '_cb"]';
+		//script_element.src = 'http://open.mapquestapi.com/geocoding/v1/reverse?lat=' + location[ 0 ] + '&lng=' + location[ 1 ] + '&callback=thereThere["' + callback_id + '_cb"]';
 		
 		thereThere[ callback_id + '_cb' ] = function( r ) {
 			//TODO: failure case, timeout case
-			callback.apply(thereThere, r.results[0].locations);
+			callback.apply(thereThere, r.response.groups[0].items); //foursquare
+			//callback.apply(thereThere, r.results[0].locations); //Mapquest
 		};
 		
 		document.body.appendChild( script_element );
@@ -273,11 +276,24 @@
 				start_field = planner_element.querySelector( 'input[name=start-location]' );
 				
 				reverseGeocode( locations.current, function( r ) {
-					if( r.geocodeQuality !== 'LATLNG' ) {
-						start_field.value = locations.current[ 0 ] + ', ' + locations.current[ 1 ];
-					} else {
+					
+					var string_out = '';
+					
+					//Mapquest
+					if( r.geocodeQuality && r.geocodeQuality !== 'LATLNG' ) {
 						
+						string_out += ( r.adminArea5 ) ? r.adminArea5 + ', ' : '';
+						string_out += ( r.adminArea3 ) ? r.adminArea3 + ', ' : '';
+						string_out += ( r.adminArea2 ) ? r.adminArea2 + ', ' : '';
+						
+						start_field.value = string_out;
 					}
+					
+					//Foursquare
+					if( r.name ) {
+						start_field.value = r.name;
+					}
+					
 				} );
 			
 				if( start_field ) {
