@@ -94,7 +94,7 @@
 
 		},
 
-		set : function(key,value) {
+		set : function(key,value,args) {
 
 			var validator = this._validators[key];
 
@@ -108,7 +108,8 @@
 
 			this.run(key,{
 				previous : this._dataItems[key],
-				current  : value
+				current  : value,
+				args     : args
 			});
 
 		},
@@ -150,7 +151,9 @@
 	
 	/** App code Begin **/
 	
-	var default_location = [ 34.0547, -118.2343 ]; //LA Union Station
+	var default_location    = [ 34.0547, -118.2343 ], //LA Union Station,
+	    foursquare_api_args = '&oauth_token=U4SYDDY1YQD2QKP2I3BAJWJEO131TK21GDUMWP1PWNPGHTQR&intent=checkin&callback=',
+	    each                = Array.prototype.forEach;
 	
 	window.thereThere = new SM({
 		state : 'no-route'
@@ -163,33 +166,62 @@
 	    for (var i = 0; i < 36; i++) {
 	        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
 	    }
-	    s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
-	    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+	    s[14] = "4";
+	    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);
 	    s[8] = s[13] = s[18] = s[23] = "-";
 
 	    var uuid = s.join("");
 	    return uuid;
 	}
 	
-	function reverseGeocode( location, callback ) {
+	function callJSONP( src, callback ) {
 		
 		var callback_id = 'ttt_' + createUUID(),
 		    script_element;
 			
-		script_element = document.createElement('script');
-		
+		script_element     = document.createElement('script');	
 		script_element.id  = 'callback_id' + '_script';
-
-		script_element.src = 'https://api.foursquare.com/v2/venues/search?ll=' + location[ 0 ] + ',' + location[ 1 ] + '&oauth_token=U4SYDDY1YQD2QKP2I3BAJWJEO131TK21GDUMWP1PWNPGHTQR&intent=checkin&callback=thereThere["' + callback_id + '_cb"]';
-		//script_element.src = 'http://open.mapquestapi.com/geocoding/v1/reverse?lat=' + location[ 0 ] + '&lng=' + location[ 1 ] + '&callback=thereThere["' + callback_id + '_cb"]';
+		script_element.src = src + 'thereThere["' + callback_id + '_cb"]';
 		
 		thereThere[ callback_id + '_cb' ] = function( r ) {
 			//TODO: failure case, timeout case
-			callback.apply(thereThere, r.response.groups[0].items); //foursquare
-			//callback.apply(thereThere, r.results[0].locations); //Mapquest
+			callback.apply( thereThere, [ r ] );
 		};
 		
 		document.body.appendChild( script_element );
+		
+	}
+	
+	function reverseGeocode( location, callback ) {
+		
+		callJSONP( 
+			'https://api.foursquare.com/v2/venues/search?' 
+			+ 'll='
+			+ location[ 0 ] + ',' + location[ 1 ]
+			+ foursquare_api_args
+		, function( r ) {
+
+			callback.apply( thereThere, [ r.response.groups[0].items ] );
+			
+		} );
+
+	}
+	
+	function geocode( place_string, callback ) {
+		
+		var location = thereThere.map_instance.getCenter();
+		
+		callJSONP( 
+			'https://api.foursquare.com/v2/venues/search?' 
+			+ 'query=' + encodeURIComponent( place_string ) + '&'
+			+ 'll='
+			+ location.lat + ',' + location.lng
+			+ foursquare_api_args
+		, function( r ) {
+
+			callback.apply( thereThere, [ r.response.groups[0].items ] );
+			
+		} );
 
 	}
 	
@@ -203,9 +235,9 @@
 		
 			navigator.geolocation.getCurrentPosition( 
 				
-				/*
-				* Yay
-				*/
+				//
+				// Yay!
+				//
 				function( location ) {
 					
 					if( thereThere.map_instance ) {
@@ -218,9 +250,9 @@
 					
 				},
 				
-				/*
-				* Yay
-				*/	
+				//
+				// Booooo!
+				//	
 				function() {
 				
 					thereThere.set( 'start-location', default_location );
@@ -267,41 +299,72 @@
 	thereThere.initPlanner = function( planner_selector ) {
 		
 		var planner_element = document.querySelector( planner_selector ),
-		    start_field;
+		    location_fields = planner_element.querySelectorAll( 'input[type=search]' ),
+		    start_field     = planner_element.querySelector( 'input[name=start-location]' );
 		
 		if( planner_element ) {
-		
-			thereThere.when( 'start-location', function( args, locations ) {
-		
-				start_field = planner_element.querySelector( 'input[name=start-location]' );
-				
-				reverseGeocode( locations.current, function( r ) {
-					
-					var string_out = '';
-					
-					//Mapquest
-					if( r.geocodeQuality && r.geocodeQuality !== 'LATLNG' ) {
-						
-						string_out += ( r.adminArea5 ) ? r.adminArea5 + ', ' : '';
-						string_out += ( r.adminArea3 ) ? r.adminArea3 + ', ' : '';
-						string_out += ( r.adminArea2 ) ? r.adminArea2 + ', ' : '';
-						
-						start_field.value = string_out;
-					}
-					
-					//Foursquare
-					if( r.name ) {
-						start_field.value = r.name;
-					}
-					
-				} );
 			
-				if( start_field ) {
-					start_field.value             = locations.current[ 0 ] + ', ' + locations.current[ 1 ];
-					start_field.dataset.latitude  = locations.current[ 0 ];
-					start_field.dataset.longitude = locations.current[ 1 ];
+			//
+			// What happens when the location changes?
+			//
+			thereThere.when( 'start-location', function( args, locations ) {
+				
+				if( !locations.args || !locations.args.geocoded ) {
+				
+					reverseGeocode( locations.current, function( r ) {
+					
+						if( r && r[ 0 ] && r[ 0 ].name ) {
+							start_field.value = r[ 0 ].name;
+						}
+					
+					} );
+						
+					start_field.value = locations.current[ 0 ] + ', ' + locations.current[ 1 ];	
+					
 				}
 		
+			} );
+			
+			//
+			// Set up behavior for location fields
+			//
+			each.call( location_fields, function( field ){ 
+				
+				field.addEventListener( 'focus', function() {
+					
+					field.dataset.startValue=field.value;
+					
+				}, false );
+				
+				field.addEventListener( 'blur', function() {
+
+					if( field.dataset.startValue !== field.value ) {
+						
+						if( isString( field.value ) ) {
+							
+							geocode( field.value, function( r ) {
+								
+								if( r && r[ 0 ] && r[ 0 ].name ) {
+									
+									field.value = r[ 0 ].name;
+									
+									thereThere.set( 'start-location', [ r[ 0 ].location.lat, r[ 0 ].location.lng ], { 'geocoded' : true } );
+									
+								}
+								
+							} );
+							
+						} else {
+							
+							//TODO: Check if it is a lat long
+							console.log('check if it is a lat long');
+							
+						}
+						
+					}
+					
+				}, false );
+			  
 			} );
 				
 		}
